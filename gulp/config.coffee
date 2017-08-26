@@ -5,3 +5,4 @@ settings = require("./sites/#{site}")
 
 module.exports =
   settings
+
