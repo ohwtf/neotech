@@ -44,7 +44,6 @@
     "gulp-concat-css": "~2.3.0",
     "gulp-css-preprocessor": "~0.0.3",
     "gulp-environments": "^0.1.2",
-    "gulp-inline-ng2-template": "^4.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-stylus": "^2.6.0",
@@ -85,7 +84,6 @@
     "vinyl-buffer": "~1.0.0",
     "vinyl-source-stream": "~1.1.0",
     "awesome-typescript-loader": "~3.2.2",
-    "angular2-template-loader": "~0.6.2",
     "express": "~4.15.4",
     "mongodb": "~2.2.31",
     "body-parser": "~1.17.2",
@@ -115,8 +113,7 @@
     "@types/jasmine-expect": "~3.6.1",
     "@types/jasmine-matchers": "~0.2.30",
     "@types/karma-fixture": "~0.2.3",
-    "@types/node": "~8.0.24",
-    "handlebars": "~4.0.10"
+    "@types/node": "~8.0.24"
   },
   "devDependencies": {
     "angular-build": "^0.7.15",
