@@ -1,0 +1,37 @@
+@require '../../../node_modules/normalize-styl/normalize.styl'
+@require '../../../node_modules/font-awesome/css/font-awesome.min.css'
+@import 'lib/*'
+
+$grayTextColor = #999
+$grayBorder = #d9d9d6
+$blackColor = #565656
+$linkColor = #529bc0
+$linkHover = #f58220
+$tableHover = #f0f0ee
+$whiteColor = #fff
+$borderGrayColor = #e3e3e3
+$buttonOrange = #f58220
+$buttonGray = #b8b7b7
+
+html, body
+    -ms-text-size-adjust 100%
+    -webkit-text-size-adjust 100%
+    -webkit-overflow-scrolling touch
+
+
+body
+    background #f3f3f0
+    font-family Roboto, sans-serif
+    font-size 14px
+    line-height 1.25
+    color $blackColor
+    -webkit-tap-highlight-color transparent
+    a
+        -webkit-tap-highlight-color transparent
+    +mq(1024)
+        background #fff
+
+
+
+@import './elements/*'
+

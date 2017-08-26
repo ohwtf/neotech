@@ -1,0 +1,46 @@
+.layout
+    max-width 1000px
+    margin 18px auto
+    position relative
+    background #fff
+    box-shadow 0 0 10px rgba(0,0,0,.1)
+    +mq(1024)
+        max-width 100%
+        box-shadow none
+        margin 0
+    +element(loader)
+        display flex
+        justify-content center
+        align-items center
+        position fixed
+        z-index 3
+        height 100%
+        width 100%
+        left 0
+        top 0
+        pointer-events none
+        opacity 0
+        visibility hidden
+        will-chane opacity
+        .loaded &
+            opacity 1
+            visibility visible
+            pointer-events none
+    +element(title)
+        text-transform uppercase
+        font-size 16px
+        color $grayTextColor
+        font-weight 500
+        line-height 1
+        font-family Roboto, sans-serif
+        letter-spacing 0.01em
+        padding 17px 18px 14px 18px
+        border-bottom 1px solid $borderGrayColor
+
+    +element(filters)
+        display table
+        margin 30px auto 35px auto
+        +mq(1024)
+            margin 20px auto
+        +mq(desktop)
+            margin 30px auto 35px auto

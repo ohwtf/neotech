@@ -1,0 +1,21 @@
+$brkpoint--1024	= 1000px
+$brkpoint--600	= 601px
+
+
+
+
+mq($break)
+    if $break == "320"
+        @media (min-width: $brkpoint--320) and (max-width: $brkpoint--480)
+            {block}
+    else if $break == "1024"
+        @media (min-width: 1px) and (max-width: $brkpoint--1024)
+            {block}
+    else if $break == "600"
+        @media (min-width: 1px) and (max-width: $brkpoint--600)
+            {block}
+    else if $break == "desktop"
+        @media (min-width: $brkpoint--1024 + 1)
+            {block}
+    else
+        error("Incorrect break value for MQ mixin: " + $break)

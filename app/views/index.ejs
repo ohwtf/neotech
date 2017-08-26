@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700" rel="stylesheet">
+    <link href="/public/css/index.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<div class="layout" data-app>
+    <div class="layout__title">The Batman Table</div>
+
+    <section class="layout__filters" data-filters>
+        <a href="/note/new" class="button button--orange_" data-note-new>+&nbsp;add new</a>
+    </section>
+
+    <section data-insert="table">
+        <div class="spinner__container"></div>
+    </section>
+    <section>
+        <section class="modal" data-modal>
+            <div class="modal__content" data-insert="modal"></div>
+        </section>
+    </section>
+
+    <section class="layout__loader">
+        <div class="spinner"></div>
+    </section>
+</div>
+
+
+<% if (mode === 'production') { %>
+    <script src="/public/dist/bundle.js"></script>
+<% } else { %>
+    <script src="../node_modules/systemjs/dist/system.src.js"></script>
+    <script src="../systemjs.config.js"></script>
+    <script>
+        System.import('./public/javascript/main.js').catch(function(err){ console.error(err); });
+    </script>
+<% } %>
+
+</body>
+</html>

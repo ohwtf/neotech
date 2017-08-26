@@ -1,0 +1,35 @@
+.form
+    position relative
+    +element(input)
+        height 40px
+        line-height 40px
+        border-radius 3px
+        border 1px solid $borderGrayColor
+        box-sizing border-box
+        padding 0 15px
+        font-family Roboto, sans-serif
+        color $blackColor
+        font-size 14px
+        font-weight 300
+        width 100%
+        outline none
+        display block
+        &:focus, &:active
+            outline none
+        &.error
+            border-color red
+    +element(select)
+        position relative
+        background #fff
+        box-sizing border-box
+        display block
+        width 100%
+        border 1px solid $grayBorder
+        font-family Roboto, sans-serif
+        color $blackColor
+        font-size 14px
+        font-weight 300
+        padding 0 15px
+        height 40px
+        line-height 40px
+        border-radius 3px

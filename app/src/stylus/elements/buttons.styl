@@ -1,0 +1,30 @@
+.button
+    border-radius 3px
+    text-align center
+    display inline-block
+    text-decoration none
+    border none
+    box-sizing border-box
+    cursor pointer
+    color $whiteColor
+    font-family Roboto, sans-serif
+    font-weight 300
+    outline none
+    +modifier(orange_)
+        background-color $buttonOrange
+    +modifier(gray_)
+        background-color $buttonGray
+    & + &
+        margin-left 15px
+    &:focus
+        outline none
+    +mq(desktop)
+        height 40px
+        line-height 42px
+        font-size 18px
+        padding 0 20px
+    +mq(1024)
+        height 30px
+        line-height 32px
+        font-size 14px
+        padding 0 15px

@@ -1,0 +1,19 @@
+.grid
+    +element(container)
+        position relative
+    +element(row)
+        position relative
+        margin 0 -8px
+        clearfix()
+        & + &
+            margin-top 10px
+            +mq(600)
+                margin-top 15px
+    +element(col)
+        box-sizing border-box
+        padding 0 8px
+        float left
+        +modifier(x2)
+            width 50%
+        +modifier(full)
+            width 100%

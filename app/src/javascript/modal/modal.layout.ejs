@@ -1,0 +1,64 @@
+<div>
+    <a href="/" class="icons__close fa fa-times" data-modal-close></a>
+    <form data-form class="form" novalidate>
+        <div class="grid__container">
+            <div class="grid__row">
+                <div class="grid__col grid__col--x2">
+                    <input type="text" placeholder="name"
+                           name="name"
+                           data-validate="text"
+                           class="form__input"
+                           value="<%= locals.data && locals.data.name ? locals.data.name : '' %>">
+                </div>
+                <div class="grid__col grid__col--x2">
+                    <input type="text"
+                           placeholder="surname"
+                           name="surname"
+                           data-validate="text"
+                           class="form__input"
+                           value="<%= locals.data && locals.data.surname ? locals.data.surname : '' %>">
+                </div>
+            </div>
+
+            <div class="grid__row">
+                <div class="grid__col grid__col--x2">
+                    <input type="tel"
+                           placeholder="phone"
+                           name="phone"
+                           data-validate="phone"
+                           class="form__input"
+                           value="<%= locals.data && locals.data.phone ? locals.data.phone : '' %>">
+                </div>
+                <div class="grid__col grid__col--x2">
+                    <input type="email"
+                           placeholder="email"
+                           name="email"
+                           data-validate="email"
+                           class="form__input"
+                           value="<%= locals.data && locals.data.email ? locals.data.email : '' %>">
+                </div>
+            </div>
+
+            <div class="grid__row">
+                <div class="grid__col grid__col--full">
+                    <select name="status" class="form__select">
+                        <% locals.selectList.forEach(function(option) { %>
+                            <option value="<%= option %>" <%= locals.data && locals.data.status  === option ? 'selected' : '' %>><%= option %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid__row">
+                <div class="grid__col grid__col--full">
+                    <button type="submit" class="button button--orange_">
+                        <%= locals.state === 'edit' ? 'save' : 'add' %>
+                    </button>
+                    <% if (locals.state === 'edit') { %>
+                        <a href="" class="button button--gray_" data-note-delete>Delete</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,52 @@
+<% if (locals.notes.length > 0 ) { %>
+    <section class="content">
+        <section class="content__table">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="table__th">Name</th>
+                    <th class="table__th">Surname</th>
+                    <th class="table__th">Phone</th>
+                    <th class="table__th">Email</th>
+                    <th class="table__th">Status</th>
+                    <th class="table__th">&nbsp;</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                    <% locals.notes.forEach(function(note) { %>
+                        <tr class="table__tr" data-note="<%= note._id %>">
+                            <td data-label="Name:" class="table__td">
+                                <span><%= note.name %></span>
+                            </td>
+                            <td data-label="Surname:" class="table__td">
+                                <span><%= note.surname %></span>
+                            </td>
+                            <td data-label="Phone:" class="table__td">
+                                <span><%= note.phone %></span>
+                            </td>
+                            <td data-label="Email:" class="table__td">
+                                <span>
+                                    <a href="mailto:<%= note.email %>" class="table__link"><%= note.email %></a>
+                                </span>
+                            </td>
+                            <td data-label="Status:" class="table__td">
+                                <span><%= note.status %></span>
+                            </td>
+                            <td class="table__td table__td--hover-view">
+                                <a href="/note/<%= note._id %>" class="table__icon fa fa-pencil-square-o" data-note-edit></a>
+                                <i class="table__icon fa fa-trash-o" data-note-delete></i>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </section>
+    </section>
+<% } else { %>
+    <div class="content-block__table">
+        <div class="no-result">
+            <div class="no-result__message">Sorry, there is no data</div>
+        </div>
+    </div>
+<% } %>

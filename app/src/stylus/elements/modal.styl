@@ -1,0 +1,52 @@
+.modal
+    position fixed
+    height 100%
+    top 0
+    left 0
+    background rgba(0,0,0, 0)
+    width 100%
+    display flex
+    justify-content center
+    align-items center
+    transition background-color .75s ease
+    will-change background-color
+    pointer-events none
+    z-index 4
+    perspective 1000
+    backface-visibility hidden
+    transform translate3d(0, 0, 0)
+    +mq(600)
+        display block
+    .close-content &
+        background rgba(0,0,0, 0.2)
+        pointer-events auto
+
+    +element(content)
+        transform translateY(-100%)
+        transition transform .5s cubic-bezier(.645,.045,.355,1), opacity .5s ease, background .5s ease
+        will-change transform , opacity
+        opacity 0
+        padding 35px 30px 30px 30px
+        background-color #fff;
+        position relative
+        box-sizing border-box
+        +mq(1024)
+            max-width 100%
+            width 600px
+            top 0
+        +mq(600)
+            opacity 1
+            padding 50px 15px 30px 15px
+        .close-content &
+            transform translateY(0)
+            opacity 1
+
+    +element(error)
+        position relative
+
+    +element(error-text)
+        font-family Roboto, sans-serif
+        font-size 19px
+        font-weight 600
+        color $grayTextColor
+        max-width 400px
