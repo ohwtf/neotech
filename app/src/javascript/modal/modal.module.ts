@@ -1,8 +1,8 @@
 import {TableService} from '../table/table.service';
 import {TableComponent} from '../table/table.component';
-import {FormElements} from "../form/FormElements";
+import {FormElements} from "../form/form.elements";
 import {HistoryModule} from '../history/history.module';
-import {HistoryData} from '../history/HistoryData';
+import {HistoryData} from '../history/history.data';
 
 export class ModalModule {
     public modal: HTMLElement;

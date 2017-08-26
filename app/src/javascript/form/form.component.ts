@@ -1,5 +1,5 @@
-import {Validate} from './Validate';
-import {FormElements} from './FormElements';
+import {Validate} from './form.validate';
+import {FormElements} from './form.elements';
 
 export class FormComponent {
     public elements: HTMLFormElement[];

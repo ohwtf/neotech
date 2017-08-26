@@ -6,7 +6,7 @@ import errorTemplate from './modal.error.layout.ejs';
 import {ModalModule} from './modal.module';
 import {TableService} from '../table/table.service';
 import {TableComponent} from '../table/table.component';
-import {FormElements} from '../form/FormElements';
+import {FormElements} from '../form/form.elements';
 import {FormComponent} from '../form/form.component';
 import {HistoryModule} from '../history/history.module';
 

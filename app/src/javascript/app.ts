@@ -3,7 +3,7 @@ import {ModalComponent} from './modal/modal.component';
 import {TableComponent} from './table/table.component';
 import {ModalModule} from './modal/modal.module';
 import {HistoryModule} from './history/history.module';
-import {HistoryData} from './history/HistoryData';
+import {HistoryData} from './history/history.data';
 
 export class App {
     public modalModule: ModalModule;

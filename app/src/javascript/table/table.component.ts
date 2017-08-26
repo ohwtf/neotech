@@ -3,9 +3,9 @@ import tableTemplate from './table.layout.ejs';
 /* tslint:enable */
 
 import {TableService} from './table.service';
-import {Notes} from './Notes';
+import {Notes} from './table.notes';
 import {ModalComponent} from '../modal/modal.component';
-import {HistoryData} from '../history/HistoryData';
+import {HistoryData} from '../history/history.data';
 import {HistoryModule} from '../history/history.module';
 
 export class TableComponent {

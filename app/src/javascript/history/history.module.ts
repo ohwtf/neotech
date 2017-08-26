@@ -1,4 +1,4 @@
-import {HistoryData} from './HistoryData';
+import {HistoryData} from './history.data';
 import {App} from '../app';
 import {ModalComponent} from '../modal/modal.component';
 

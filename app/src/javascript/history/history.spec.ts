@@ -11,7 +11,7 @@ import {TableService} from '../table/table.service';
 import {TableComponent} from '../table/table.component';
 import {ModalModule} from '../modal/modal.module';
 import {ModalComponent} from '../modal/modal.component';
-import {HistoryData} from './HistoryData';
+import {HistoryData} from './history.data';
 
 
 describe("History", () => {
