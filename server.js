@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(expressMongoDb(db.url));
 app.use(express.static('.'));
 app.use(require('express-is-ajax-request'));
-app.set('views', __dirname + '/app/views');
+app.set('views', __dirname + '/app/src/javascript');
 app.set('view engine', 'ejs');
 
 

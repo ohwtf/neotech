@@ -3,7 +3,7 @@ import tableTemplate from './table.layout.ejs';
 /* tslint:enable */
 
 import {TableService} from './table.service';
-import {Notes} from './table.notes';
+import {TableNotes} from './table.notes';
 import {ModalComponent} from '../modal/modal.component';
 import {HistoryData} from '../history/history.data';
 import {HistoryModule} from '../history/history.module';
@@ -11,8 +11,9 @@ import {HistoryModule} from '../history/history.module';
 export class TableComponent {
     public activeItem: HTMLElement;
     public actionElements: HTMLElement[];
-    public notes: Notes;
+    public notes: TableNotes[];
     public modal: ModalComponent;
+    public tableTemplate: tableTemplate = tableTemplate;
 
     constructor(
         public tableContainer: Element,
@@ -35,11 +36,10 @@ export class TableComponent {
         }).then(data => {
             this.appContainer.classList.remove('loaded');
             this.notes = data;
-            this.tableContainer.innerHTML = tableTemplate({notes: this.notes});
+            this.tableContainer.innerHTML = this.tableTemplate({notes: this.notes});
             this.assignEvents();
             this.windowScrollEvent();
         });
-
     }
 
 
@@ -90,6 +90,9 @@ export class TableComponent {
         this.tableService.deleteNote(id).then(res => {
             if (res.ok) {
                 this.getAllNotes();
+            } else {
+                let data = res.json();
+                this.modal.showError(data.error);
             }
         });
     }

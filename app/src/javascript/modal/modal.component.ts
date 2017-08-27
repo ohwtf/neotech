@@ -1,6 +1,6 @@
 /* tslint:disable */
-import modalTemplate from './modal.layout.ejs';
-import errorTemplate from './modal.error.layout.ejs';
+import modalTemplate from './layout.ejs';
+import errorTemplate from './error.ejs';
 /* tslint:enable */
 
 import {ModalModule} from './modal.module';
@@ -15,6 +15,8 @@ export class ModalComponent extends ModalModule {
     public form: HTMLFormElement;
     public deleteNoteButton: HTMLElement = null;
     public closeModal: HTMLElement[] = [];
+    public modalTemplate: modalTemplate = modalTemplate;
+    public errorTemplate: errorTemplate = errorTemplate;
 
     constructor(
         public tableService: TableService,
@@ -66,9 +68,9 @@ export class ModalComponent extends ModalModule {
         }
     }
 
-    private render() {
-        if (modalTemplate) {
-            this.modalContainer.innerHTML = modalTemplate({
+    public render() {
+        if (this.modalTemplate) {
+            this.modalContainer.innerHTML = this.modalTemplate({
                 state: this.state,
                 selectList: this.selectOptions,
                 data: this.formData
@@ -81,9 +83,9 @@ export class ModalComponent extends ModalModule {
     }
 
 
-    private renderError(message: string) {
-        if (errorTemplate) {
-            this.modalContainer.innerHTML = errorTemplate({
+    public renderError(message: string) {
+        if (this.errorTemplate) {
+            this.modalContainer.innerHTML = this.errorTemplate({
                 message: message
             });
             this.closeModal = Array.prototype.slice.call(this.modalContainer.querySelectorAll('[data-modal-close]'));

@@ -1,7 +1,8 @@
+import {PromiseNote} from '../helpers/promise';
 export class TableService {
     public NOTES = '/note';
 
-    public getNotes() {
+    public getNotes(): Promise<PromiseNote> {
         return fetch(this.NOTES, {
             method: 'GET',
             headers: {
@@ -11,7 +12,7 @@ export class TableService {
         });
     }
 
-    public showNote(id: string) {
+    public showNote(id: string): Promise<PromiseNote> {
         return fetch(`${this.NOTES}/${id}`, {
             method: 'GET',
             headers: {
@@ -21,7 +22,7 @@ export class TableService {
         });
     }
 
-    public saveNote(data: string, id: string) {
+    public saveNote(data: string, id: string): Promise<PromiseNote> {
         return fetch(`${this.NOTES}/${id}`, {
             method: 'PUT',
             headers: {
@@ -32,7 +33,7 @@ export class TableService {
         });
     }
 
-    public addNote(data: string) {
+    public addNote(data: string): Promise<PromiseNote> {
         return fetch(this.NOTES, {
             method: 'POST',
             headers: {
@@ -43,7 +44,7 @@ export class TableService {
         });
     }
 
-    public deleteNote(id: string) {
+    public deleteNote(id: string): Promise<PromiseNote> {
         return fetch(`${this.NOTES}/${id}`, {
             method: 'DELETE',
             headers: {

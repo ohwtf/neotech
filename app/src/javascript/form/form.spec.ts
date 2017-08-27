@@ -1,19 +1,26 @@
 /// <reference path='../../../../node_modules/@types/jasmine/index.d.ts' />
+/// <reference path='../../../../node_modules/@types/jasmine-expect/index.d.ts' />
 
-/* tslint:disable */
-import * as modalTemplate from '../modal/modal.layout.ejs';
-/* tslint:enable */
+import {JST} from '../helpers/jst';
 
-
+declare let JST: JST;
+const modalTemplate = JST['modal/layout'];
 import {FormComponent} from './form.component';
 
 
 describe("Form", () => {
     let FormTest: FormComponent;
+    let selecteOptions = [ 'old', 'new', 'tomato', 'potato', 'not new', 'not old' ];
 
     beforeEach(() => {
         let customElement = document.createElement('div');
-        customElement.innerHTML = modalTemplate;
+
+        customElement.innerHTML = modalTemplate({
+            state: 'new',
+            selectList: selecteOptions,
+            data: []
+        });
+
         let form: HTMLFormElement = <HTMLFormElement>customElement.querySelector('[data-form]');
 
         FormTest = new FormComponent(form);
@@ -91,10 +98,6 @@ describe("Form", () => {
             }
 
             if (item.name === 'status') {
-                let customOption = document.createElement('option');
-                customOption.text = 'New';
-                customOption.value = 'new';
-                item.add(customOption);
                 item.value = 'new';
             }
         }

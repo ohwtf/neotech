@@ -22,15 +22,13 @@ export class App {
     }
 
     public initialize() {
-        if (this.tableContainer) {
-            this.tableComponent = new TableComponent(this.tableContainer, this.tableService, this.history, this.filterContainer);
-            this.modalModule = new ModalModule(this.tableService, this.tableComponent, this.history, this.filterContainer);
+        this.tableComponent = new TableComponent(this.tableContainer, this.tableService, this.history, this.filterContainer);
+        this.modalModule = new ModalModule(this.tableService, this.tableComponent, this.history, this.filterContainer);
 
-            this.tableComponent.initialize();
-            this.modalModule.events();
-            this.history.initialize(this);
-            this.events();
-        }
+        this.tableComponent.initialize();
+        this.modalModule.events();
+        this.history.initialize(this);
+        this.events();
     }
 
     public events() {

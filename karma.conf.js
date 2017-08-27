@@ -8,21 +8,20 @@ module.exports = function(config) {
             dir : 'coverage/'
         },
 
-        frameworks: ["karma-typescript", 'jasmine', 'jasmine-matchers'],
+        frameworks: ["karma-typescript", "jasmine-ajax", "jasmine", 'jasmine-matchers'],
 
         files: [
-            { pattern: "app/src/javascript/**/*.ejs"},
-            { pattern: "app/src/javascript/**/*.ts" }
+            "node_modules/jasmine-ajax/lib/mock-ajax.js",
+            { pattern: "app/src/javascript/**/*.+(ts|ejs)" }
         ],
 
         preprocessors: {
             '**/*.ts': ['karma-typescript', 'coverage'],
-            '**/*.ejs': ['ejs'],
-            'app/src/**/!(*spec|*mock).ts': ['karma-typescript', 'coverage'],
+            '**/*.ejs': ['ejs']
         },
 
         ejsOptions: {
-            parentPath: 'app/views/index.ejs'
+            parentPath: './app/src/javascript'
         },
 
         karmaTypescriptConfig: {
@@ -37,20 +36,25 @@ module.exports = function(config) {
                 "allowUnusedLabels": false,
                 "stripInternal": true,
                 "noImplicitAny": true,
+                "module": "commonjs",
                 "skipLibCheck": true,
                 "noImplicitReturns": false,
                 "noImplicitUseStrict": false,
                 "noFallthroughCasesInSwitch": true,
                 "allowSyntheticDefaultImports": true,
+                "allowJS": true,
                 "target": "ES5",
                 "lib":["es6","dom"],
-                "types" : ["node", 'jasmine', 'core-js', 'jasmine-matchers'],
+                "types" : ["node", "jasmine", "core-js", "jasmine-matchers", "jasmine-ajax"],
                 "typeRoots": [
                     "node_modules/@types/*"
-                ],
+                ]
             },
-            include: ["app/src/javascript/**/*.ts"],
-            exclude: ["node_modules", '*/**/*.ejs'],
+            bundlerOptions: {
+                addNodeGlobals: ["ejs", "JST"]
+            },
+            include: ["app/src/javascript/**/*.ts", "app/src/javascript/**/*.ejs", "node_modules/jasmine-ajax/lib/mock-ajax.js"],
+            exclude: ["node_modules", "*/**/*.ejs"],
             reports:
                 {
                     "html": "coverage",
@@ -64,7 +68,7 @@ module.exports = function(config) {
         singleRun: false,
         concurrency: Infinity,
 
-        reporters: ['progress', 'coverage', 'karma-typescript'],
+        reporters: ["progress", "coverage", "karma-typescript"],
 
         browsers: ["Chrome"]
     });

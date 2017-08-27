@@ -1,6 +1,5 @@
-let ObjectID = require('mongodb').ObjectID;
-
-let env = process.env.NODE_ENV || 'dev';
+const ObjectID = require('mongodb').ObjectID;
+const env = process.env.NODE_ENV || 'dev';
 
 module.exports = function(app) {
 

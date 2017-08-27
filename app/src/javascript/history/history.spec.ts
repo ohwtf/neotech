@@ -1,17 +1,17 @@
 /// <reference path='../../../../node_modules/@types/jasmine/index.d.ts' />
 
-/* tslint:disable */
-import * as tableTemplate from '../../../views/index.ejs';
-/* tslint:enable */
+import {JST} from '../helpers/jst';
 
+declare let JST: JST;
+const indexPage = JST['index'];
 
 import {HistoryModule} from './history.module';
 import {App} from '../app';
-import {TableService} from '../table/table.service';
 import {TableComponent} from '../table/table.component';
 import {ModalModule} from '../modal/modal.module';
 import {ModalComponent} from '../modal/modal.component';
 import {HistoryData} from './history.data';
+import {TableMockService} from '../table/table.service.mock';
 
 
 describe("History", () => {
@@ -20,10 +20,10 @@ describe("History", () => {
     beforeEach(() => {
         historyTest = new HistoryModule(history);
         let template = document.createElement('div');
-        template.innerHTML = tableTemplate;
+        template.innerHTML = indexPage({mode: 'production'});
         let filterContainer = template.querySelector('[data-app]');
 
-        AppTest = new App(filterContainer, new TableService(), new HistoryModule(history));
+        AppTest = new App(filterContainer, new TableMockService(), new HistoryModule(history));
         AppTest.tableComponent = new TableComponent(AppTest.tableContainer, AppTest.tableService, AppTest.history, filterContainer);
         AppTest.modalModule = new ModalModule(AppTest.tableService, AppTest.tableComponent, AppTest.history, filterContainer);
         AppTest.modal = new ModalComponent(AppTest.tableService, AppTest.tableComponent, AppTest.history, filterContainer, true, 'new');

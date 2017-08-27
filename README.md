@@ -1,5 +1,5 @@
 necessary scripts
 - npm install
 - gulp | (compile resources)
-- npm app-run
+- npm run app-run
 - npm test

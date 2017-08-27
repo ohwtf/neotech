@@ -12,6 +12,7 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "stripInternal": true,
+    "allowJs": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
     "noImplicitReturns": false,
@@ -26,7 +27,6 @@
   },
   "exclude": [
     "node_modules/*",
-    "*/**/*.spec.ts",
-    "typings"
+    "*/**/*.spec.ts"
   ]
 }

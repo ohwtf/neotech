@@ -1,91 +1,106 @@
 /// <reference path='../../../../node_modules/@types/jasmine/index.d.ts' />
 
-/* tslint:disable */
-import * as tableTemplate from '../../../views/index.ejs';
-import * as modalTemplate from '../modal/modal.layout.ejs';
-/* tslint:enable */
+
+import {JST} from '../helpers/jst';
+
+
+declare let JST: JST;
+const indexPage = JST['index'];
+const modalPage = JST['modal/layout'];
+const modalError = JST['modal/error'];
+
 
 
 import {App} from '../app';
 import {HistoryModule} from '../history/history.module';
 import {ModalModule} from './modal.module';
-import {TableService} from '../table/table.service';
 import {TableComponent} from '../table/table.component';
 import {ModalComponent} from './modal.component';
+import {TableMockService} from '../table/table.service.mock';
 
 describe("ModalComponent", () => {
     let AppTest: App;
-    let ModalTable: ModalModule;
-
+    let selecteOptions = [ 'old', 'new', 'tomato', 'potato', 'not new', 'not old' ];
 
     beforeEach(() => {
         let template = document.createElement('div');
-        template.innerHTML = tableTemplate;
+        template.innerHTML = indexPage({mode: 'production'});
         let filterContainer = template.querySelector('[data-app]');
 
-        AppTest = new App(filterContainer, new TableService(), new HistoryModule(history));
+        AppTest = new App(filterContainer, new TableMockService(), new HistoryModule(history));
         AppTest.tableComponent = new TableComponent(AppTest.tableContainer, AppTest.tableService, AppTest.history, filterContainer);
         AppTest.modalModule = new ModalModule(AppTest.tableService, AppTest.tableComponent, AppTest.history, filterContainer);
         AppTest.modal = new ModalComponent(AppTest.tableService, AppTest.tableComponent, AppTest.history, filterContainer, true, 'new');
 
-        ModalTable = AppTest.modalModule;
         AppTest.initialize();
-
-        let modalView = document.createElement('div');
-        modalView.innerHTML = modalTemplate;
-        AppTest.modal.modalContainer.appendChild(modalView);
-
-        AppTest.modal.form = <HTMLFormElement>AppTest.modal.modalContainer.querySelector('[data-form]');
-        AppTest.modal.closeModal = Array.prototype.slice.call(AppTest.modal.modalContainer.querySelectorAll('[data-modal-close]'));
-        AppTest.modal.deleteNoteButton = <HTMLElement>AppTest.modal.modalContainer.querySelector('[data-note-delete]');
-
-        let data = {
-            "_id": "59a0016dcb4a4c13eabbb0f0",
-            "name": "qwewq",
-            "email": "qweqwe@mail.ru",
-            "phone": "1232131",
-            "surname": "qweqwe",
-            "status": "potato"
-        };
-        AppTest.modal.show(data);
-
     });
 
-    it('show without data', () => {
+    it('modal show', () => {
+        let renderSpy = spyOn(AppTest.modal, 'render');
+        let animate = spyOn(AppTest.modalModule, 'animate');
+        AppTest.modal.modalTemplate = modalPage;
         AppTest.modal.show();
-        expect(AppTest.modalModule.appContainer.classList.contains('close-content')).toBeTruthy();
+
+        expect(AppTest.modal.modalTemplate).toBeDefined();
+        expect(renderSpy).toHaveBeenCalled();
     });
 
-    it('show with data', () => {
-        expect(AppTest.modalModule.appContainer.classList.contains('close-content')).toBeTruthy();
-    });
+    it('submit form', () => {
+        let submitSpy = spyOn(AppTest.modal, 'submit');
+        AppTest.modal.modalTemplate = modalPage;
+        AppTest.modal.show();
 
-    it('form submit', () => {
-        //TODO #submit
-        for (let item of  Array.prototype.slice.call(AppTest.modal.form.querySelectorAll('[data-validate]'))) {
-            item.remove();
+        let fillItems = Array.prototype.slice.call(AppTest.modal.appContainer.querySelectorAll('input, select'));
+
+        for (let item of fillItems) {
+            switch (item.getAttribute('data-validate')) {
+                case 'email':
+                    item.value = 'test@testoff.com';
+                    break;
+                case 'phone':
+                    item.value = '+371 292929';
+                    break;
+                default:
+                    item.value = 'testvalue';
+                    break;
+            }
+
+            if (item.name === 'status') {
+                item.value = 'new';
+            }
         }
 
-        AppTest.modal.assignEvents();
         let formButton = <HTMLElement>AppTest.modal.form.querySelector('button[type="submit"]');
+
         formButton.click();
+        expect(submitSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('close modal', () => {
-        let clickElement = AppTest.modal.closeModal[0];
-        clickElement.setAttribute('href', '#');
-        clickElement.click();
-        expect(AppTest.modalModule.appContainer.classList.contains('close-content')).toBeFalsy();
-    });
 
     it('delete modal', () => {
-        let clickElement = AppTest.modal.deleteNoteButton;
-        clickElement.setAttribute('href', '#');
-        clickElement.click();
+        let deleteSpy = spyOn(AppTest.modal, 'deleteNote');
+        AppTest.modal.modalTemplate = modalPage;
+
+        AppTest.modal.tableService.showNote('123').then((res) => {
+            AppTest.modal.formData = res.json();
+            AppTest.modal.modalContainer.innerHTML = AppTest.modal.modalTemplate({
+                state: 'edit',
+                selectList: selecteOptions,
+                data: AppTest.modal.formData
+            });
+
+        }).then(() => {
+            AppTest.modal.deleteNoteButton = <HTMLElement>AppTest.modal.modalContainer.querySelector('[data-note-delete]');
+            AppTest.modal.deleteNoteButton.setAttribute('href', '#');
+            AppTest.modal.assignEvents();
+            AppTest.modal.deleteNoteButton.click();
+            expect(deleteSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    it('show error', () => {
+        AppTest.modal.errorTemplate = modalError;
+        AppTest.modal.renderError('test');
+        expect(AppTest.modal.closeModal).toBeDefined();
     });
 });
-
-
-
-
-

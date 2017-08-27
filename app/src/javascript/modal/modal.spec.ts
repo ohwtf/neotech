@@ -1,81 +1,26 @@
 /// <reference path='../../../../node_modules/@types/jasmine/index.d.ts' />
 
-/* tslint:disable */
-import * as tableTemplate from '../../../views/index.ejs';
-import * as modalTemplate from '../modal/modal.layout.ejs';
-/* tslint:enable */
+
+import {JST} from '../helpers/jst';
+declare let JST: JST;
+const indexPage = JST['index'];
+const modalPage = JST['modal/layout'];
 
 
 import {App} from '../app';
+import {TableMockService} from '../table/table.service.mock';
 import {HistoryModule} from '../history/history.module';
 import {ModalModule} from './modal.module';
-import {TableService} from '../table/table.service';
 import {TableComponent} from '../table/table.component';
 import {ModalComponent} from './modal.component';
 
-
-class TableMockService implements TableService {
-    public NOTES = '/note';
-
-    public getNotes() {
-        fetch(this.NOTES, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        });
-        return Promise.resolve({ok: true});
-    }
-
-    public saveNote(data: string, id: string) {
-        fetch(`${this.NOTES}/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: data
-        });
-        return Promise.resolve({ok: true});
-    }
-
-    public addNote(data: string) {
-        fetch(this.NOTES, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: data
-        });
-        return Promise.resolve({ok: true});
-    }
-
-    public deleteNote(id: string) {
-        fetch(`${this.NOTES}/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        });
-
-        return new Promise((resolve) => {
-           resolve({ok: true});
-        });
-    }
-}
-
-
 describe("ModalModule", () => {
     let AppTest: App;
-    let ModalTable: ModalModule;
-
+    let selecteOptions = [ 'old', 'new', 'tomato', 'potato', 'not new', 'not old' ];
 
     beforeEach(() => {
         let template = document.createElement('div');
-        template.innerHTML = tableTemplate;
+        template.innerHTML = indexPage({mode: 'production'});
         let filterContainer = template.querySelector('[data-app]');
 
         AppTest = new App(filterContainer, new TableMockService(), new HistoryModule(history));
@@ -83,32 +28,24 @@ describe("ModalModule", () => {
         AppTest.modalModule = new ModalModule(AppTest.tableService, AppTest.tableComponent, AppTest.history, filterContainer);
         AppTest.modal = new ModalComponent(AppTest.tableService, AppTest.tableComponent, AppTest.history, filterContainer, true, 'new');
 
-        let modalView = document.createElement('div');
-        modalView.innerHTML = modalTemplate;
-        AppTest.modal.modalContainer.appendChild(modalView);
-
-        AppTest.modal.form = <HTMLFormElement>AppTest.modal.modalContainer.querySelector('[data-form]');
-        AppTest.modal.closeModal = Array.prototype.slice.call(AppTest.modal.modalContainer.querySelectorAll('[data-modal-close]'));
-        AppTest.modal.deleteNoteButton = <HTMLElement>AppTest.modal.modalContainer.querySelector('[data-note-delete]');
-
-        ModalTable = AppTest.modalModule;
         AppTest.initialize();
     });
 
-    it('animate function open', () => {
-        ModalTable.animate('open');
-        expect(ModalTable.appContainer.classList.contains('close-content')).toBeTruthy();
+    it('animate be open', () => {
+        AppTest.modalModule.animate('open');
+        expect(AppTest.modalModule.appContainer.classList.contains('close-content')).toBeTruthy();
     });
 
-    it('animate function close', () => {
-        ModalTable.animate('close');
-        expect(ModalTable.appContainer.classList.contains('close-content')).toBeFalsy();
+    it('animate default state with history = false', () => {
+        AppTest.modalModule.animate('def');
+        expect(AppTest.modalModule.appContainer.classList.contains('close-content')).toBeFalsy();
     });
 
-    it('animate function default', () => {
-        ModalTable.animate('test');
-        expect(ModalTable.appContainer.classList.contains('close-content')).toBeFalsy();
+    it('animate with history = false', () => {
+        AppTest.modalModule.animate('close', true);
+        expect(AppTest.modalModule.appContainer.classList.contains('close-content')).toBeFalsy();
     });
+
 
     it('window click', () => {
         let e = new window.KeyboardEvent('keydown', {
@@ -121,80 +58,109 @@ describe("ModalModule", () => {
         Object.defineProperty(e, 'keyCode', {'value': 27});
         document.dispatchEvent(e);
 
-        expect(ModalTable.appContainer.classList.contains('close-content')).toBeFalsy();
-    });
-
-    it('form submit', () => {
-        let mySpy = spyOn(AppTest.modalModule.tableComponent, 'getAllNotes');
-        let data = {
-            "_id": "59a0016dcb4a4c13eabbb0f0",
-            "name": "qwewq",
-            "email": "qweqwe@mail.ru",
-            "phone": "1232131",
-            "surname": "qweqwe",
-            "status": "potato"
-        };
-        AppTest.modalModule.submit(JSON.stringify(data), 'edit');
-        AppTest.modalModule.submit(JSON.stringify(data), 'new');
-
-        AppTest.modalModule.tableService.saveNote(JSON.stringify(data), data._id).then(res => {
-            if (res.ok) {
-                expect(mySpy).toHaveBeenCalled();
-            }
-        });
-    });
-
-    it('close modal', () => {
-        let clickElement = AppTest.modal.closeModal[0];
-        clickElement.setAttribute('href', '#');
-        let customSpy = spyOn(AppTest.modalModule, 'animate');
-        clickElement.click();
-
-        expect(customSpy).toHaveBeenCalled();
         expect(AppTest.modalModule.appContainer.classList.contains('close-content')).toBeFalsy();
     });
 
 
-    it('delete note', () => {
-        let mySpy = spyOn(AppTest.modalModule.tableComponent, 'getAllNotes');
-        let animateSpy = spyOn(AppTest.modalModule, 'animate');
-        let clickElement = AppTest.modal.deleteNoteButton;
+    it('submit', () => {
+        let spyAllNotes = spyOn(AppTest.modalModule.tableComponent, 'getAllNotes');
+        let spyAnimate = spyOn(AppTest.modalModule, 'animate');
 
-        AppTest.modalModule.formData = {
-            "_id": "59a0016dcb4a4c13eabbb0f0",
-            "name": "qwewq",
-            "email": "qweqwe@mail.ru",
-            "phone": "1232131",
-            "surname": "qweqwe",
-            "status": "potato"
+        let data = {
+            'name': 'testvalue',
+            'surname': 'testvalue',
+            'phone': '+371 292929',
+            'status': 'new',
+            'email': 'test@testoff.com',
+            '_id': '123'
         };
-        clickElement.setAttribute('href', '#');
-        let ev = document.createEvent('MouseEvent');
-        AppTest.modalModule.deleteNote(ev);
 
-        AppTest.modalModule.tableService.deleteNote(AppTest.modalModule.formData._id).then(res => {
-            if (res.ok) {
-                expect(animateSpy).toHaveBeenCalled();
-                expect(mySpy).toHaveBeenCalled();
-            }
+        AppTest.modalModule.submit(JSON.stringify(data), 'edit');
+        AppTest.modalModule.tableService.saveNote(JSON.stringify(data), data._id).then( () => {
+            expect(spyAllNotes).toHaveBeenCalled();
+            expect(spyAnimate).toHaveBeenCalled();
         });
 
     });
 
-    it('close method call', () => {
-        let clickElement = AppTest.modal.closeModal[0];
-        clickElement.setAttribute('href', '#');
-        let ev = document.createEvent('MouseEvent');
-        let mySpy = spyOn(AppTest.modalModule, 'animate');
-        AppTest.modalModule.close(ev);
-        expect(mySpy).toHaveBeenCalled();
+    it('submit', () => {
+        let spyAllNotes = spyOn(AppTest.modalModule.tableComponent, 'getAllNotes');
+        let spyAnimate = spyOn(AppTest.modalModule, 'animate');
+
+        let data = {
+            'name': 'testvalue',
+            'surname': 'testvalue',
+            'phone': '+371 292929',
+            'status': 'new',
+            'email': 'test@testoff.com'
+        };
+
+        AppTest.modalModule.submit(JSON.stringify(data), 'default');
+
+        AppTest.modalModule.tableService.addNote(JSON.stringify(data)).then(() => {
+            expect(spyAllNotes).toHaveBeenCalled();
+            expect(spyAnimate).toHaveBeenCalled();
+        });
     });
 
+    it('delete button', () => {
+        let spyAllNotes = spyOn(AppTest.modalModule.tableComponent, 'getAllNotes');
+        let spyAnimate = spyOn(AppTest.modalModule, 'animate');
+
+        AppTest.modalModule.formData = {
+            'name': 'testvalue',
+            'surname': 'testvalue',
+            'phone': '+371 292929',
+            '_id': '123',
+            'status': 'new',
+            'email': 'test@testoff.com'
+        };
+
+        AppTest.modalModule.modalContainer.innerHTML = modalPage({
+            state: 'edit',
+            selectList: selecteOptions,
+            data: AppTest.modalModule.formData
+        });
 
 
-    it('modal close call', () => {
-        let clickElement = AppTest.modalModule.modal;
-        clickElement.click();
+        let element = <HTMLElement>AppTest.modalModule.modalContainer.querySelector('[data-note-delete]');
+        element.addEventListener('click', AppTest.modalModule.deleteNote.bind(AppTest.modalModule));
+        element.click();
+
+        AppTest.modalModule.tableService.deleteNote('123').then(() => {
+            expect(spyAllNotes).toHaveBeenCalled();
+            expect(spyAnimate).toHaveBeenCalled();
+        });
+    });
+
+    it('close button', () => {
+        let spyAnimate = spyOn(AppTest.modalModule, 'animate');
+
+        AppTest.modalModule.formData = {
+            'name': 'testvalue',
+            'surname': 'testvalue',
+            'phone': '+371 292929',
+            '_id': '123',
+            'status': 'new',
+            'email': 'test@testoff.com'
+        };
+
+        AppTest.modalModule.modalContainer.innerHTML = modalPage({
+            state: 'edit',
+            selectList: selecteOptions,
+            data: AppTest.modalModule.formData
+        });
+
+        let element = <HTMLElement>AppTest.modalModule.modalContainer.querySelectorAll('[data-modal-close]')[0];
+        element.setAttribute('href', '#');
+        let ev = document.createEvent('MouseEvent');
+        AppTest.modalModule.close(ev);
+        AppTest.modalModule.modal.click();
+        element.click();
+
+        expect(spyAnimate).toHaveBeenCalledTimes(3);
+        expect(AppTest.modalModule.appContainer.classList.contains('close-content')).toBeFalsy();
     });
 });
+
 
