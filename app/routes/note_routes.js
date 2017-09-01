@@ -12,8 +12,10 @@ module.exports = function(app) {
             return res.sendStatus(404);
         }
         let db = req.db;
-        return db.collection('notes').find().sort({_id: -1}).toArray((err, result) => {
-            if (err)  { return console.log(err) }
+        return db.collection('notes').find().sort({_id: -1}).limit(30).toArray((err, result) => {
+            if (err)  {
+                return res.status(400).send({error: err});
+            }
             res.send(result);
         })
     });

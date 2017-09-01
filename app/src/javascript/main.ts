@@ -1,6 +1,6 @@
-import {TableService} from './table/table.service';
 import {App} from './app';
 import {HistoryModule} from './history/history.module';
+import {NoteService} from './note/note.service';
 
 let appElement = document.querySelector('[data-app]');
 
@@ -11,7 +11,7 @@ export class BatTable {
     ) {}
     public initialize() {
         if (this.filterSection) {
-            let newApp = new App(this.filterSection, new TableService(), this.appHistory);
+            let newApp = new App(this.filterSection, new NoteService(), this.appHistory);
             let touch;
 
             if ('ontouchstart' in document) {

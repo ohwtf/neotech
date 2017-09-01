@@ -1,28 +1,32 @@
 import {PromiseNote} from '../helpers/promise';
-export class TableService {
+import {TableNote} from '../table/table.notes';
+
+export class NoteService {
     public NOTES = '/note';
 
-    public getNotes(): Promise<PromiseNote> {
+    public getNotes(): Promise<TableNote[]> {
         return fetch(this.NOTES, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             }
-        });
+        }).then(response => response.json())
+          .catch(this.handleError);
     }
 
-    public showNote(id: string): Promise<PromiseNote> {
+    public showNote(id: string): Promise<TableNote> {
         return fetch(`${this.NOTES}/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             }
-        });
+        }).then(response => response.json())
+          .catch(this.handleError);
     }
 
-    public saveNote(data: string, id: string): Promise<PromiseNote> {
+    public saveNote(data: string, id: string): Promise<string> {
         return fetch(`${this.NOTES}/${id}`, {
             method: 'PUT',
             headers: {
@@ -30,7 +34,8 @@ export class TableService {
                 'X-Requested-With': 'XMLHttpRequest'
             },
             body: data
-        });
+        }).then(response => response.json())
+          .catch(this.handleError);
     }
 
     public addNote(data: string): Promise<PromiseNote> {
@@ -41,7 +46,8 @@ export class TableService {
                 'X-Requested-With': 'XMLHttpRequest'
             },
             body: data
-        });
+        }).then(response => response.json())
+          .catch(this.handleError);
     }
 
     public deleteNote(id: string): Promise<PromiseNote> {
@@ -51,6 +57,13 @@ export class TableService {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             }
-        });
+        }).then(response => response.json())
+          .catch(this.handleError);
+    }
+
+    private handleError(error: string) {
+        // TODO create modal window with error message
+        console.log(error);
+        return Promise.reject(error);
     }
 }

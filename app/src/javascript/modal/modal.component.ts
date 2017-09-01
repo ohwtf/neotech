@@ -4,11 +4,12 @@ import errorTemplate from './error.ejs';
 /* tslint:enable */
 
 import {ModalModule} from './modal.module';
-import {TableService} from '../table/table.service';
 import {TableComponent} from '../table/table.component';
 import {FormElements} from '../form/form.elements';
 import {FormComponent} from '../form/form.component';
 import {HistoryModule} from '../history/history.module';
+import {NoteService} from "../note/note.service";
+import {TableNote} from '../table/table.notes';
 
 
 export class ModalComponent extends ModalModule {
@@ -19,7 +20,7 @@ export class ModalComponent extends ModalModule {
     public errorTemplate: errorTemplate = errorTemplate;
 
     constructor(
-        public tableService: TableService,
+        public tableService: NoteService,
         public tableComponent: TableComponent,
         public history: HistoryModule,
         public appContainer: Element,
@@ -29,7 +30,7 @@ export class ModalComponent extends ModalModule {
         super(tableService, tableComponent, history, appContainer);
     }
 
-    public show(data?: FormElements) {
+    public show(data?: TableNote) {
         if (data) {
             this.formData = data;
         }

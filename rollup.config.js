@@ -29,6 +29,6 @@ export default {
             compilerOptions: {client: true, strict: true}
         }),
 
-        uglify()
+        // uglify()
     ]
 }

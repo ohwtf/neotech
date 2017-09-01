@@ -14,14 +14,14 @@ import {ModalModule} from '../modal/modal.module';
 import {ModalComponent} from '../modal/modal.component';
 import {TableComponent} from './table.component';
 import {HistoryModule} from '../history/history.module';
-import {TableNotes} from './table.notes';
 import {TableMockService} from './table.service.mock';
+import {TableNote} from './table.notes';
 
 
 
 describe("TableModule", () => {
     let AppTest: App;
-    let tableNote: TableNotes[] = [
+    let tableNote: TableNote[] = [
         {
             _id: '123',
             email: 'test@test.com',

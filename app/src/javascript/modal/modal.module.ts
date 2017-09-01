@@ -1,17 +1,17 @@
-import {TableService} from '../table/table.service';
 import {TableComponent} from '../table/table.component';
-import {FormElements} from "../form/form.elements";
 import {HistoryModule} from '../history/history.module';
 import {HistoryData} from '../history/history.data';
+import {NoteService} from "../note/note.service";
+import {TableNote} from '../table/table.notes';
 
 export class ModalModule {
     public modal: HTMLElement;
     public modalContainer: Element;
-    public formData: FormElements = {};
+    public formData: TableNote;
     public selectOptions = [ 'old', 'new', 'tomato', 'potato', 'not new', 'not old' ];
 
     constructor(
-        public tableService: TableService,
+        public tableService: NoteService,
         public tableComponent: TableComponent,
         public history: HistoryModule,
         public appContainer: Element
@@ -40,19 +40,15 @@ export class ModalModule {
     public submit(data: string, state?: string) {
         switch (state) {
             case 'edit':
-                this.tableService.saveNote(data, this.formData._id).then(res => {
-                    if (res.ok) {
-                        this.tableComponent.getAllNotes();
-                        this.animate('close');
-                    }
+                this.tableService.saveNote(data, this.formData._id).then(() => {
+                    this.tableComponent.getAllNotes();
+                    this.animate('close');
                 });
                 break;
             default:
-                this.tableService.addNote(data).then(res => {
-                    if (res.ok) {
-                        this.tableComponent.getAllNotes();
-                        this.animate('close');
-                    }
+                this.tableService.addNote(data).then(() => {
+                    this.tableComponent.getAllNotes();
+                    this.animate('close');
                 });
                 break;
         }
@@ -66,11 +62,9 @@ export class ModalModule {
     public deleteNote(e: MouseEvent) {
         e.preventDefault();
         if (this.formData._id) {
-            this.tableService.deleteNote(this.formData._id).then(res => {
-                if (res.ok) {
-                    this.tableComponent.getAllNotes();
-                    this.animate('close');
-                }
+            this.tableService.deleteNote(this.formData._id).then(() => {
+                this.tableComponent.getAllNotes();
+                this.animate('close');
             });
         }
     }

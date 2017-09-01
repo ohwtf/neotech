@@ -11,8 +11,7 @@ module.exports = function(config) {
         frameworks: ["karma-typescript", "jasmine-ajax", "jasmine", 'jasmine-matchers'],
 
         files: [
-            "node_modules/jasmine-ajax/lib/mock-ajax.js",
-            { pattern: "app/src/javascript/**/*.+(ts|ejs)" }
+            {pattern: "app/src/javascript/**/*.+(ts|ejs)"}
         ],
 
         preprocessors: {
@@ -53,7 +52,7 @@ module.exports = function(config) {
             bundlerOptions: {
                 addNodeGlobals: ["ejs", "JST"]
             },
-            include: ["app/src/javascript/**/*.ts", "app/src/javascript/**/*.ejs", "node_modules/jasmine-ajax/lib/mock-ajax.js"],
+            include: ["app/src/javascript/**/*.ts", "app/src/javascript/**/*.ejs"],
             exclude: ["node_modules", "*/**/*.ejs"],
             reports:
                 {

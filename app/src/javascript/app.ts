@@ -1,9 +1,9 @@
-import {TableService} from './table/table.service';
 import {ModalComponent} from './modal/modal.component';
 import {TableComponent} from './table/table.component';
 import {ModalModule} from './modal/modal.module';
 import {HistoryModule} from './history/history.module';
 import {HistoryData} from './history/history.data';
+import {NoteService} from './note/note.service';
 
 export class App {
     public modalModule: ModalModule;
@@ -14,7 +14,7 @@ export class App {
 
     constructor(
         public filterContainer: Element,
-        public tableService: TableService,
+        public tableService: NoteService,
         public history: HistoryModule
     ) {
         this.addNewNote = <HTMLLinkElement>this.filterContainer.querySelector('[data-note-new]');

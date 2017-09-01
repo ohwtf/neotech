@@ -1,10 +1,10 @@
-import {TableService} from './table.service';
-import {TableNotes} from './table.notes';
+import {TableNote} from './table.notes';
 import {PromiseNote} from '../helpers/promise';
+import {NoteService} from "../note/note.service";
 
-export class TableMockService implements TableService {
+export class TableMockService implements NoteService {
     public NOTES = '/note';
-    protected tableData: TableNotes[] = [
+    protected tableData: TableNote[] = [
         {
             _id: '123',
             email: 'test@test.com',

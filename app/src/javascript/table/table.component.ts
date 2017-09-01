@@ -2,40 +2,49 @@
 import tableTemplate from './table.layout.ejs';
 /* tslint:enable */
 
-import {TableService} from './table.service';
-import {TableNotes} from './table.notes';
 import {ModalComponent} from '../modal/modal.component';
 import {HistoryData} from '../history/history.data';
 import {HistoryModule} from '../history/history.module';
+import {TableNote} from "./table.notes";
+import {NoteService} from '../note/note.service';
 
 export class TableComponent {
     public activeItem: HTMLElement;
     public actionElements: HTMLElement[];
-    public notes: TableNotes[];
+    public notes: TableNote[];
     public modal: ModalComponent;
+    public scrollFlag: true;
     public tableTemplate: tableTemplate = tableTemplate;
+    public scrollTimer: NodeJS.Timer;
 
     constructor(
         public tableContainer: Element,
-        public tableService: TableService,
+        public tableService: NoteService,
         public history: HistoryModule,
         public appContainer: Element,
     ) {}
 
     public initialize() {
         this.getAllNotes();
-        window.addEventListener('scroll', this.windowScrollEvent.bind(this));
+        this.events();
+        this.windowScrollEvent();
+    }
+
+    public events() {
+        window.addEventListener('scroll', () => {
+            clearTimeout(this.scrollTimer);
+            this.scrollTimer = setTimeout(() => {
+                this.windowScrollEvent();
+            }, 100);
+        });
     }
 
     public getAllNotes() {
         this.appContainer.classList.add('loaded');
-        this.tableService.getNotes().then(res => {
-            if (res.ok) {
-                return res.json();
-            }
-        }).then(data => {
+
+        this.tableService.getNotes().then(result => {
             this.appContainer.classList.remove('loaded');
-            this.notes = data;
+            this.notes = result;
             this.tableContainer.innerHTML = this.tableTemplate({notes: this.notes});
             this.assignEvents();
             this.windowScrollEvent();
@@ -45,31 +54,25 @@ export class TableComponent {
 
     public getNote(id: string, historyPush = true) {
         this.modal = new ModalComponent(this.tableService, this, this.history, this.appContainer, historyPush, 'edit');
-
-        return this.tableService.showNote(id).then(res => {
-            return res.json();
-        }).then(data => {
-            if (data.error) {
-                this.modal.showError(data.error);
-            } else {
-                this.modal.show(data);
-            }
-            return data;
+        return this.tableService.showNote(id).then(result => {
+            this.modal.show(result);
         });
     }
 
     public windowScrollEvent() {
-        let tableElements: HTMLElement[] = Array.prototype.slice.call(this.appContainer.querySelectorAll('[data-note]'));
+        if (!this.scrollFlag) {
+            let tableElements: HTMLElement[] = Array.prototype.slice.call(this.appContainer.querySelectorAll('[data-note]'));
 
-        if (this.appContainer.querySelectorAll('[data-note]:not(.visible)').length === 0) {
-            return;
-        }
+            if (this.appContainer.querySelectorAll('[data-note]:not(.visible)').length === 0) {
+                return;
+            }
 
-        for (let item of tableElements) {
-            if (item.getBoundingClientRect().top <= window.innerHeight * 1.25 && item.getBoundingClientRect().top + item.clientHeight > 0) {
-                item.classList.add('visible');
-            } else {
-                item.classList.remove('visible');
+            for (let item of tableElements) {
+                if (item.getBoundingClientRect().top <= window.innerHeight * 1.25 && item.getBoundingClientRect().top + item.clientHeight > 0) {
+                    item.classList.add('visible');
+                } else {
+                    item.classList.remove('visible');
+                }
             }
         }
     }
@@ -87,13 +90,8 @@ export class TableComponent {
 
     private deleteNote(item: HTMLElement) {
         let id = item.dataset.note;
-        this.tableService.deleteNote(id).then(res => {
-            if (res.ok) {
-                this.getAllNotes();
-            } else {
-                let data = res.json();
-                this.modal.showError(data.error);
-            }
+        this.tableService.deleteNote(id).then(() => {
+            this.getAllNotes();
         });
     }
 
@@ -112,11 +110,7 @@ export class TableComponent {
         };
 
         this.activeItem = item;
-        this.getNote(id, true).then(data => {
-            if (data.error) {
-                this.getAllNotes();
-            }
-        });
+        this.getNote(id, true);
         this.history.navigate(historyData);
     }
 }
